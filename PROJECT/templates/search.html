@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+<div class="products">
+    {% for product in products %}
+        <div class="product" id="product-{{ product['id'] }}">
+            <h3>{{ product['title'] }}</h3>
+            <p>{{ product['description'] }}</p>
+            <p><strong>${{ product['price'] }}</strong></p>
+
+            {% if 'user_id' in session %}
+                {% if product['seller_id'] != session['user_id'] %}
+                    <form method="post" action="{{ url_for('add_to_cart', product_id=product['id']) }}">
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                {% else %}
+                    <p><em>You can't buy your own product.</em></p>
+                {% endif %}
+            {% else %}
+                <p><a href="{{ url_for('login') }}">Log in</a> to buy.</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>No results found.</p>  
+</div>
+{% endfor %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+{% endblock %}
+

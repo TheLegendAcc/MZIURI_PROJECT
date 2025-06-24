@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recent Products</title>
+    <style>
+        body {
+            background-color: #f9fafe;
+            color: #1a1a1a;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-top: 2rem;
+        }
+
+        .products {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product {
+            background-color: #ffffff;
+            border: 1px solid #d0e3ff;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(26, 115, 232, 0.08);
+            transition: transform 0.2s;
+        }
+
+        .product:hover {
+            transform: scale(1.02);
+        }
+
+        .product h3 {
+            margin-top: 0;
+            color: #1a73e8;
+        }
+
+        .product a {
+            text-decoration: none;
+            color: #1a73e8;
+        }
+
+        .product a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #155ab6;
+        }
+
+        em {
+            color: #999;
+        }
+
+        p a {
+            color: #1a73e8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% endwith %}
+    <h2>Recent Products</h2>
+    <div class="products">
+        {% for product in products %}
+            <div class="product">
+                <h3><a href="{{ url_for('product', product_id=product['id']) }}">{{ product['title'] }}</a></h3>
+                <p>{{ product['description'] }}</p>
+                <p><strong>${{ product['price'] }}</strong></p>
+
+                {% if 'user_id' in session %}
+                    {% if product['seller_id'] != session['user_id'] %}
+                        <form method="post" action="{{ url_for('add_to_cart', product_id=product['id']) }}">
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                    {% else %}
+                        <p><em>You can't buy your own product.</em></p>
+                    {% endif %}
+                {% else %}
+                    <p><a href="{{ url_for('login') }}">Log in</a> to buy.</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>No products found.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
+{% endblock %}
+

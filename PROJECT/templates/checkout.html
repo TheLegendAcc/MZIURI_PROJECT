@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    .checkout-box {
+        max-width: 700px;
+        margin: 2rem auto;
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(26, 115, 232, 0.15);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+
+    th, td {
+        padding: 0.8rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid #d0dff9;
+    }
+
+    th {
+        background-color: #f0f6ff;
+        color: #1a73e8;
+        font-weight: 600;
+    }
+
+    tbody tr:hover {
+        background-color: #f9fbff;
+    }
+
+    .total-amount {
+        color: #1a73e8;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-align: right;
+    }
+
+    button {
+        background-color: #1a73e8;
+        color: white;
+        padding: 0.7rem 1.4rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: block;
+        margin-left: auto;
+    }
+
+    button:hover {
+        background-color: #155ab6;
+    }
+    
+</style>
+
+<h2 style="text-align: center; color: #1a73e8; margin-bottom: 1rem;">Checkout</h2>
+
+<div class="checkout-box">
+  <form method="post">
+    <table>
+      <thead>
+        <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th></tr>
+      </thead>
+      <tbody>
+        {% set ns = namespace(total=0) %}
+        {% for p in products %}
+          {% set quantity = cart[p.id|string] %}
+          {% set subtotal = p.price * quantity %}
+          {% set ns.total = ns.total + subtotal %}
+          <tr>
+            <td>{{ p.title }}</td>
+            <td>${{ p.price }}</td>
+            <td>{{ quantity }}</td>
+            <td>${{ '%.2f' % subtotal }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3 class="total-amount">Total: ${{ '%.2f' % ns.total }}</h3>
+    <button type="submit">Confirm Purchase</button>
+  </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+</div>
+{% endblock %}

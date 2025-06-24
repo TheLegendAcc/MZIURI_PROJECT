@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    .post-form-box {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(26, 115, 232, 0.1);
+    }
+
+    .post-form-box form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .post-form-box input,
+    .post-form-box textarea {
+        margin-bottom: 1rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid #cbdcf6;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .post-form-box textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .post-form-box button {
+        background-color: #1a73e8;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        align-self: flex-start;
+    }
+
+    .post-form-box button:hover {
+        background-color: #155ab6;
+    }
+</style>
+<h2>Post a Product</h2>
+
+<div class="post-form-box">
+  <form method="post">
+    <input type="text" name="title" placeholder="Title" required>
+    <textarea name="description" placeholder="Description"></textarea>
+    <input type="number" step="0.01" name="price" placeholder="Price" required>
+    <button type="submit">Post</button>
+  </form>
+</div>
+{% endblock %}

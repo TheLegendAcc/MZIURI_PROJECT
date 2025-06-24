@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}MarketBuddy{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+        body {
+            background-color: #f9fafe;
+            color: #1a1a1a;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            padding-top: 80px;
+        }   
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fbbc04;
+            background-color: #1a73e8;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-top: 2rem;
+        }
+
+        .products {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product {
+            background-color: #ffffff;
+            border: 1px solid #d0e3ff;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(26, 115, 232, 0.08);
+            transition: transform 0.2s;
+        }
+
+        .product:hover {
+            transform: scale(1.02);
+        }
+
+        .product h3 {
+            margin-top: 0;
+            color: #1a73e8;
+        }
+
+        .product a {
+            text-decoration: none;
+            color: #1a73e8;
+        }
+
+        .product a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #155ab6;
+        }
+
+        em {
+            color: #999;
+        }
+
+        p a {
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        header {
+            background-color: #1a73e8;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #dbe4f1;
+            justify-content: center;
+        }
+
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            width: 100%;
+            margin-right: 50px;
+        }
+
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #fbbc04;
+            padding: 0.3rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+            margin-right: auto;
+            text-decoration: none; /* prevents underline */
+            display: inline-block;
+        }
+
+        .logo:hover {
+            color: #fbbc04;
+            background-color: #ffffff;
+        }
+
+
+        nav {
+            margin-left: auto;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #dfefff;
+            text-decoration: underline;
+        }
+        .search-form {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 6px;
+            padding: 0.2rem;
+            height: 38px;
+            box-shadow: 0 0 0 1px #ddd;
+        }
+
+        .search-form input[type="text"] {
+            height: 100%;
+            padding: 0 0.75rem;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            border-radius: 6px 0 0 6px;
+            box-sizing: border-box;
+        }
+
+        .search-form button {
+            height: 100%;
+            width: 42px;
+            font-size: 1.1rem;
+            background-color: transparent;
+            color: #1a73e8;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+            transition: background-color 0.2s;
+        }
+
+        .search-form button:hover {
+            background-color: #ffffff;
+        }     
+        .flash-messages {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .flash {
+            display: inline-block;
+            pointer-events: auto;
+            background-color: rgba(29, 173, 16, 0.9);
+            color: white;
+            padding: 0.8em 1.2em;
+            margin: 0.2em 0;
+            border-radius: 5px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            font-size: 1rem;
+        }
+
+
+        .flash.success {
+            background-color: rgba(29, 173, 16, 0.9);
+        }
+        .flash.warning {
+            background-color: #fbbc04;
+            color: black;
+        }
+        .flash.danger {
+            background-color: #d9534f;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </div>
+
+  <main>
+    <header>
+    <div class="navbar">
+        <a href="{{ url_for('index') }}" class="logo">MarketBuddy</a>
+
+        <form action="{{ url_for('search') }}" method="get" class="search-form">
+            <input type="text" name="query" placeholder="Search..." required>
+            <button type="submit">🔍</button>
+        </form>
+
+        <nav>
+            <a href="{{ url_for('post') }}">Post</a>
+            <a href="{{ url_for('cart') }}">Cart</a>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </nav>
+        
+    </div>
+    </header>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
